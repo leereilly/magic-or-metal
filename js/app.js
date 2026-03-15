@@ -26,6 +26,7 @@ const Game = {
     this.currentIndex = 0;
     this.answers = [];
     this.questions = this.selectQuestions(count);
+    UI.showPlayer(Data.getRandomTrack());
     UI.renderQuestion(this.questions[0], 0, count);
   },
 

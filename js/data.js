@@ -30,6 +30,34 @@ const Data = {
     }));
   },
 
+  // SoundCloud tracks — black & death metal ambient tracks for gameplay
+  soundcloudTracks: [
+    "https://soundcloud.com/nuclearblastrecords/behemoth-ov-fire-and-the-void",
+    "https://soundcloud.com/nuclearblastrecords/behemoth-ora-pro-nobis-lucifer",
+    "https://soundcloud.com/nuclearblastrecords/dimmu-borgir-mourning-palace",
+    "https://soundcloud.com/nuclearblastrecords/immortal-all-shall-fall",
+    "https://soundcloud.com/nuclearblastrecords/enslaved-isa",
+    "https://soundcloud.com/nuclearblastrecords/watain-the-wild-hunt",
+    "https://soundcloud.com/cenaborelli/emperor-i-am-the-black-wizards",
+    "https://soundcloud.com/nuclearblastrecords/dark-funeral-nail-them-to-the",
+    "https://soundcloud.com/nuclearblastrecords/belphegor-conjuring-the-dead",
+    "https://soundcloud.com/metalbladerecords/amon-amarth-the-pursuit-of",
+    "https://soundcloud.com/metalbladerecords/the-black-dahlia-murder",
+    "https://soundcloud.com/nuclearblastrecords/nightwish-ghost-love-score",
+    "https://soundcloud.com/nuclearblastrecords/meshuggah-bleed",
+    "https://soundcloud.com/nuclearblastrecords/accept-teutonic-terror",
+    "https://soundcloud.com/relaborelli/bathory-a-fine-day-to-die",
+    "https://soundcloud.com/nuclearblastrecords/kreator-phantom-antichrist",
+    "https://soundcloud.com/centurymedarec/dark-tranquillity-terminus",
+    "https://soundcloud.com/metalbladerecords/cannibal-corpse-code-of-the",
+    "https://soundcloud.com/nuclearblastrecords/fleshgod-apocalypse-the-violation",
+    "https://soundcloud.com/nuclearblastrecords/testament-rise-up"
+  ],
+
+  getRandomTrack() {
+    return this.soundcloudTracks[Math.floor(Math.random() * this.soundcloudTracks.length)];
+  },
+
   async fetchCardDetails(cardName) {
     try {
       const resp = await fetch(

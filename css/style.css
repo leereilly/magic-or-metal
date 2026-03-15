@@ -208,7 +208,7 @@ kbd {
 .quiz-screen {
   width: 100%;
   text-align: center;
-  padding: 1rem 0;
+  padding: 1rem 0 6rem;
 }
 
 .quiz-header {
@@ -416,7 +416,7 @@ kbd {
 .results-screen {
   width: 100%;
   text-align: center;
-  padding: 1.5rem 0 3rem;
+  padding: 1.5rem 0 6rem;
 }
 
 .results-title {
@@ -575,6 +575,52 @@ kbd {
 
 .results-actions {
   margin-bottom: 1rem;
+}
+
+/* ========================================
+   SOUNDCLOUD PLAYER
+   ======================================== */
+.sc-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--bg-dark);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 0;
+  transform: translateY(100%);
+  transition: transform 0.4s ease;
+}
+.sc-player-visible {
+  transform: translateY(0);
+}
+.sc-player iframe {
+  display: block;
+  opacity: 0.85;
+  filter: brightness(0.9);
+}
+.sc-close {
+  position: absolute;
+  top: -28px;
+  right: 8px;
+  z-index: 1001;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: var(--bg-dark);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition), border-color var(--transition);
+}
+.sc-close:hover {
+  color: var(--text-primary);
+  border-color: rgba(255,255,255,0.25);
 }
 
 /* ========================================

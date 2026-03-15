@@ -167,5 +167,36 @@ const UI = {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+  },
+
+  // ── SoundCloud Player ──
+
+  showPlayer(trackUrl) {
+    this.hidePlayer();
+    const encoded = encodeURIComponent(trackUrl);
+    const container = document.createElement('div');
+    container.id = 'sc-player';
+    container.className = 'sc-player';
+    container.innerHTML = `
+      <button class="sc-close" onclick="UI.hidePlayer()" aria-label="Close player" title="Close player">✕</button>
+      <iframe
+        id="sc-iframe"
+        width="100%"
+        height="80"
+        scrolling="no"
+        frameborder="no"
+        allow="autoplay"
+        loading="lazy"
+        src="https://w.soundcloud.com/player/?url=${encoded}&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false&color=%23dc3545">
+      </iframe>
+    `;
+    document.body.appendChild(container);
+    // Animate in
+    requestAnimationFrame(() => container.classList.add('sc-player-visible'));
+  },
+
+  hidePlayer() {
+    const el = document.getElementById('sc-player');
+    if (el) el.remove();
   }
 };
