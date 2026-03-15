@@ -4,6 +4,7 @@ Fetches metal song titles from MusicBrainz API.
 Output: data/metal.json — {s: [titles], b: [bands], a: [albums]}
 """
 import json
+import math
 import os
 import time
 import requests
@@ -96,14 +97,18 @@ if __name__ == '__main__':
     os.makedirs('data', exist_ok=True)
     songs = fetch_all_metal_songs()
 
-    # Columnar format for better compression
-    output = {
-        "s": [s["title"] for s in songs],
-        "b": [s["band"] for s in songs],
-        "a": [s["album"] for s in songs]
-    }
+    # Split into shards
+    SHARD_COUNT = 5
+    shard_size = math.ceil(len(songs) / SHARD_COUNT)
+    for i in range(SHARD_COUNT):
+        shard = songs[i * shard_size : (i + 1) * shard_size]
+        output = {
+            "s": [s["title"] for s in shard],
+            "b": [s["band"] for s in shard],
+            "a": [s["album"] for s in shard]
+        }
+        with open(f'data/metal-{i}.json', 'w') as f:
+            json.dump(output, f, separators=(',', ':'), ensure_ascii=False)
+        print(f"data/metal-{i}.json: {len(shard)} songs")
 
-    with open('data/metal.json', 'w') as f:
-        json.dump(output, f, separators=(',', ':'), ensure_ascii=False)
-
-    print(f"Wrote {len(songs)} metal songs to data/metal.json")
+    print(f"Wrote {len(songs)} metal songs across {SHARD_COUNT} shards")

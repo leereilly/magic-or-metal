@@ -1,14 +1,22 @@
 /**
- * Data layer — loads quiz data and fetches Scryfall card details on demand.
+ * Data layer — loads a random shard of quiz data per session.
+ * Data is split across multiple files so the browser only fetches one of each.
  */
 const Data = {
+  MTG_SHARDS: 5,
+  METAL_SHARDS: 5,
   mtgNames: [],
   metalSongs: [],
+  mtgShardIndex: -1,
+  metalShardIndex: -1,
 
   async load() {
+    this.mtgShardIndex = Math.floor(Math.random() * this.MTG_SHARDS);
+    this.metalShardIndex = Math.floor(Math.random() * this.METAL_SHARDS);
+
     const [mtgResp, metalResp] = await Promise.all([
-      fetch('data/mtg.json'),
-      fetch('data/metal.json')
+      fetch(`data/mtg-${this.mtgShardIndex}.json`),
+      fetch(`data/metal-${this.metalShardIndex}.json`)
     ]);
 
     this.mtgNames = await mtgResp.json();

@@ -1,41 +1,63 @@
 #!/usr/bin/env python3
 """
-Cross-references MTG and metal data to remove ambiguous entries
+Cross-references MTG and metal data shards to remove ambiguous entries
 that exist in both lists.
 """
+import glob
 import json
 
-with open('data/mtg.json') as f:
-    mtg_names = json.load(f)
+# Load all MTG shards
+mtg_shards = {}
+all_mtg_names = {}
+for path in sorted(glob.glob('data/mtg-*.json')):
+    with open(path) as f:
+        names = json.load(f)
+    mtg_shards[path] = names
+    for name in names:
+        all_mtg_names[name.lower()] = name
 
-with open('data/metal.json') as f:
-    metal = json.load(f)
-
-# Build lowercase lookup sets
-mtg_lower = {name.lower(): name for name in mtg_names}
-metal_lower = {title.lower(): i for i, title in enumerate(metal['s'])}
+# Load all metal shards
+metal_shards = {}
+all_metal_titles = {}
+for path in sorted(glob.glob('data/metal-*.json')):
+    with open(path) as f:
+        metal = json.load(f)
+    metal_shards[path] = metal
+    for i, title in enumerate(metal['s']):
+        all_metal_titles[title.lower()] = (path, i, title)
 
 # Find overlaps
-overlaps = set(mtg_lower.keys()) & set(metal_lower.keys())
+overlaps = set(all_mtg_names.keys()) & set(all_metal_titles.keys())
 print(f"Found {len(overlaps)} overlapping names:")
 for name in sorted(overlaps):
-    print(f"  - {mtg_lower[name]} (MTG) / {metal['s'][metal_lower[name]]} by {metal['b'][metal_lower[name]]} (Metal)")
+    info = all_metal_titles[name]
+    print(f"  - {all_mtg_names[name]} (MTG) / {info[2]} (Metal)")
 
-# Remove overlaps from both
-mtg_clean = [n for n in mtg_names if n.lower() not in overlaps]
-metal_indices = [i for i in range(len(metal['s'])) if metal['s'][i].lower() not in overlaps]
+# Remove overlaps from MTG shards
+total_mtg_removed = 0
+for path, names in mtg_shards.items():
+    clean = [n for n in names if n.lower() not in overlaps]
+    removed = len(names) - len(clean)
+    total_mtg_removed += removed
+    with open(path, 'w') as f:
+        json.dump(clean, f, separators=(',', ':'))
+    if removed:
+        print(f"  {path}: removed {removed}")
 
-metal_clean = {
-    "s": [metal['s'][i] for i in metal_indices],
-    "b": [metal['b'][i] for i in metal_indices],
-    "a": [metal['a'][i] for i in metal_indices]
-}
+# Remove overlaps from metal shards
+total_metal_removed = 0
+for path, metal in metal_shards.items():
+    keep = [i for i in range(len(metal['s'])) if metal['s'][i].lower() not in overlaps]
+    removed = len(metal['s']) - len(keep)
+    total_metal_removed += removed
+    clean = {
+        "s": [metal['s'][i] for i in keep],
+        "b": [metal['b'][i] for i in keep],
+        "a": [metal['a'][i] for i in keep]
+    }
+    with open(path, 'w') as f:
+        json.dump(clean, f, separators=(',', ':'), ensure_ascii=False)
+    if removed:
+        print(f"  {path}: removed {removed}")
 
-with open('data/mtg.json', 'w') as f:
-    json.dump(mtg_clean, f, separators=(',', ':'))
-
-with open('data/metal.json', 'w') as f:
-    json.dump(metal_clean, f, separators=(',', ':'), ensure_ascii=False)
-
-print(f"Cleaned: {len(mtg_clean)} MTG cards, {len(metal_clean['s'])} metal songs")
-print(f"Removed {len(mtg_names) - len(mtg_clean)} MTG + {len(metal['s']) - len(metal_clean['s'])} metal overlaps")
+print(f"\nRemoved {total_mtg_removed} MTG + {total_metal_removed} metal overlaps")
