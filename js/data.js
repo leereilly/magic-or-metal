@@ -30,28 +30,14 @@ const Data = {
     }));
   },
 
-  // SoundCloud tracks — black & death metal ambient tracks for gameplay
+  // SoundCloud playlists — verified black & death metal playlists for gameplay
   soundcloudTracks: [
-    "https://soundcloud.com/nuclearblastrecords/behemoth-ov-fire-and-the-void",
-    "https://soundcloud.com/nuclearblastrecords/behemoth-ora-pro-nobis-lucifer",
-    "https://soundcloud.com/nuclearblastrecords/dimmu-borgir-mourning-palace",
-    "https://soundcloud.com/nuclearblastrecords/immortal-all-shall-fall",
-    "https://soundcloud.com/nuclearblastrecords/enslaved-isa",
-    "https://soundcloud.com/nuclearblastrecords/watain-the-wild-hunt",
-    "https://soundcloud.com/cenaborelli/emperor-i-am-the-black-wizards",
-    "https://soundcloud.com/nuclearblastrecords/dark-funeral-nail-them-to-the",
-    "https://soundcloud.com/nuclearblastrecords/belphegor-conjuring-the-dead",
-    "https://soundcloud.com/metalbladerecords/amon-amarth-the-pursuit-of",
-    "https://soundcloud.com/metalbladerecords/the-black-dahlia-murder",
-    "https://soundcloud.com/nuclearblastrecords/nightwish-ghost-love-score",
-    "https://soundcloud.com/nuclearblastrecords/meshuggah-bleed",
-    "https://soundcloud.com/nuclearblastrecords/accept-teutonic-terror",
-    "https://soundcloud.com/relaborelli/bathory-a-fine-day-to-die",
-    "https://soundcloud.com/nuclearblastrecords/kreator-phantom-antichrist",
-    "https://soundcloud.com/centurymedarec/dark-tranquillity-terminus",
-    "https://soundcloud.com/metalbladerecords/cannibal-corpse-code-of-the",
-    "https://soundcloud.com/nuclearblastrecords/fleshgod-apocalypse-the-violation",
-    "https://soundcloud.com/nuclearblastrecords/testament-rise-up"
+    "https://soundcloud.com/moxxy2112/sets/black-metal-top-tracks",
+    "https://soundcloud.com/raphael-malke-239747974/sets/black-death-metal",
+    "https://soundcloud.com/user-820886078/sets/brutal-death-metal",
+    "https://soundcloud.com/dominic-fischer-372860636/sets/black-metal-top-tracks",
+    "https://soundcloud.com/circuit-machine/sets/black-metal-top-tracks",
+    "https://soundcloud.com/theociderecords/sets/death-metal-brutal-death-metal"
   ],
 
   getRandomTrack() {
