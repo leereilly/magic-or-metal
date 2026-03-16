@@ -96,10 +96,32 @@ const Game = {
           a.cardDetails = cardDetails[detailIndex++];
         }
       }
-
-      // Re-render with card details
-      UI.renderResults(this.answers, score, this.questions.length, false);
     }
+
+    // Fetch album art for wrong metal answers
+    const wrongMetal = this.answers.filter(
+      a => !a.correct && a.question.answer === 'metal'
+    );
+
+    if (wrongMetal.length > 0) {
+      const albumArts = await Promise.all(
+        wrongMetal.map((a, i) =>
+          new Promise(resolve =>
+            setTimeout(() => Data.fetchAlbumArt(a.question.band, a.question.album).then(resolve), i * 150)
+          )
+        )
+      );
+
+      let artIndex = 0;
+      for (const a of this.answers) {
+        if (!a.correct && a.question.answer === 'metal') {
+          a.albumArt = albumArts[artIndex++];
+        }
+      }
+    }
+
+    // Re-render with card details and album art (or clear loading state)
+    UI.renderResults(this.answers, score, this.questions.length, false);
   }
 };
 

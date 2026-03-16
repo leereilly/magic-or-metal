@@ -44,6 +44,28 @@ const Data = {
     return this.soundcloudTracks[Math.floor(Math.random() * this.soundcloudTracks.length)];
   },
 
+  async fetchAlbumArt(band, album) {
+    try {
+      const query = encodeURIComponent(`release:"${album}" AND artist:"${band}"`);
+      const resp = await fetch(
+        `https://musicbrainz.org/ws/2/release/?query=${query}&limit=1&fmt=json`,
+        { headers: { 'User-Agent': 'MagicOrMetal/1.0 (github.com/leereilly/magic-or-metal)' } }
+      );
+      if (!resp.ok) return null;
+      const data = await resp.json();
+      if (!data.releases || data.releases.length === 0) return null;
+      const mbid = data.releases[0].id;
+      const artResp = await fetch(`https://coverartarchive.org/release/${mbid}`);
+      if (!artResp.ok) return null;
+      const artData = await artResp.json();
+      const front = artData.images?.find(img => img.front) || artData.images?.[0];
+      return front?.thumbnails?.small || front?.thumbnails?.['250'] || front?.image || null;
+    } catch (e) {
+      console.warn(`Failed to fetch album art for "${album}" by "${band}":`, e);
+      return null;
+    }
+  },
+
   async fetchCardDetails(cardName) {
     try {
       const resp = await fetch(
