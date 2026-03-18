@@ -12,7 +12,7 @@
   --bg-card-alt:    #16213e;
   --border-gold:    #c9a84c;
   --text-primary:   #e8dcc8;
-  --text-secondary: #8b8680;
+  --text-secondary: #a8a29c;
   --accent-magic:   #4a90d9;
   --accent-metal:   #dc3545;
   --accent-correct: #28a745;
@@ -366,7 +366,6 @@ kbd {
 .hint-text {
   font-size: 0.75rem;
   color: var(--text-secondary);
-  opacity: 0.6;
 }
 
 /* --- Feedback Animations --- */
@@ -536,12 +535,28 @@ kbd {
   border: 1px solid rgba(220, 53, 69, 0.15);
 }
 
+.card-art-wrap {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  overflow: hidden;
+}
+
 .card-art {
   width: 120px;
-  height: auto;
+  height: 120px;
+  object-fit: cover;
   border-radius: 8px;
   flex-shrink: 0;
   box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card-art.loaded {
+  opacity: 1;
 }
 
 .detail-info {
@@ -559,6 +574,9 @@ kbd {
   color: var(--border-gold);
   margin-left: 0.5rem;
 }
+.ms {
+  margin-right: 0.15em;
+}
 .detail-info .oracle-text {
   font-size: 0.85rem;
   color: var(--text-secondary);
@@ -570,7 +588,6 @@ kbd {
 .detail-info small {
   font-size: 0.75rem;
   color: var(--text-secondary);
-  opacity: 0.7;
 }
 
 .results-actions {
@@ -711,8 +728,13 @@ kbd {
   .quiz-card {
     padding: 2rem 1.2rem;
   }
+  .card-art-wrap {
+    width: 80px;
+    height: 80px;
+  }
   .card-art {
     width: 80px;
+    height: 80px;
   }
   .detail-card {
     flex-direction: column;

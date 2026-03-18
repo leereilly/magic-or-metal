@@ -76,48 +76,53 @@ const Game = {
 
     UI.renderResults(this.answers, score, this.questions.length, true);
 
-    // Fetch Scryfall details for wrong MTG answers
-    const wrongMtg = this.answers.filter(
-      a => !a.correct && a.question.answer === 'magic'
-    );
+    try {
+      // Fetch Scryfall details and album art in parallel
+      const allMtg = this.answers.filter(a => a.question.answer === 'magic');
+      const allMetal = this.answers.filter(a => a.question.answer === 'metal');
 
-    if (wrongMtg.length > 0) {
-      const cardDetails = await Promise.all(
-        wrongMtg.map((a, i) =>
-          new Promise(resolve =>
-            setTimeout(() => Data.fetchCardDetails(a.question.text).then(resolve), i * 100)
-          )
-        )
-      );
+      const [cardDetails, albumArts] = await Promise.all([
+        allMtg.length > 0
+          ? Promise.all(
+              allMtg.map((a, i) =>
+                new Promise(resolve =>
+                  setTimeout(() =>
+                    Data.fetchCardDetails(a.question.text)
+                      .then(resolve)
+                      .catch(() => resolve(null)),
+                    i * 100
+                  )
+                )
+              )
+            )
+          : [],
+        allMetal.length > 0
+          ? Promise.all(
+              allMetal.map((a, i) =>
+                new Promise(resolve =>
+                  setTimeout(() =>
+                    Data.fetchAlbumArt(a.question.band, a.question.album)
+                      .then(resolve)
+                      .catch(() => resolve(null)),
+                    i * 150
+                  )
+                )
+              )
+            )
+          : []
+      ]);
 
       let detailIndex = 0;
-      for (const a of this.answers) {
-        if (!a.correct && a.question.answer === 'magic') {
-          a.cardDetails = cardDetails[detailIndex++];
-        }
-      }
-    }
-
-    // Fetch album art for wrong metal answers
-    const wrongMetal = this.answers.filter(
-      a => !a.correct && a.question.answer === 'metal'
-    );
-
-    if (wrongMetal.length > 0) {
-      const albumArts = await Promise.all(
-        wrongMetal.map((a, i) =>
-          new Promise(resolve =>
-            setTimeout(() => Data.fetchAlbumArt(a.question.band, a.question.album).then(resolve), i * 150)
-          )
-        )
-      );
-
       let artIndex = 0;
       for (const a of this.answers) {
-        if (!a.correct && a.question.answer === 'metal') {
+        if (a.question.answer === 'magic') {
+          a.cardDetails = cardDetails[detailIndex++];
+        } else if (a.question.answer === 'metal') {
           a.albumArt = albumArts[artIndex++];
         }
       }
+    } catch (e) {
+      console.warn('Error fetching details:', e);
     }
 
     // Re-render with card details and album art (or clear loading state)
